@@ -1,0 +1,43 @@
+{
+  "name": "elastical",
+  "version": "0.0.1",
+  "description": "A flexible chaining API for ElasticSearch",
+  "main": "index.js",
+  "scripts": {
+    "test": "bin/test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamplify/elastical.git"
+  },
+  "keywords": [
+    "elastic",
+    "elasticsearch",
+    "analytics",
+    "search",
+    "lucene"
+  ],
+  "author": "Matt Roman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamplify/elastical/issues"
+  },
+  "homepage": "https://github.com/jamplify/elastical",
+  "dependencies": {
+    "lodash": "^3.7.0"
+  },
+  "jshintConfig": {
+    "eqeqeq": true,
+    "indent": 2,
+    "esnext": true,
+    "asi": true,
+    "maxlen": 80,
+    "singleGroups": true,
+    "unused": true
+  },
+  "devDependencies": {
+    "mocha": "^2.2.4",
+    "should": "^6.0.1",
+    "sinon": "^1.14.1"
+  }
+}
