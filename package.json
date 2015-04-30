@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/jamplify/elastical",
   "dependencies": {
+    "elasticsearch": "^4.0.2",
     "lodash": "^3.7.0"
   },
   "jshintConfig": {

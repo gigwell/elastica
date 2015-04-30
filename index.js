@@ -1,7 +1,7 @@
 var Elasticsearch = require('elasticsearch'),
-  Search = require('search').Search,
-  Update = require('search').Update,
-  Bulk = require('search').Bulk
+  Search = require('./lib/search').Search,
+  Update = require('./lib/search').Update,
+  Bulk = require('./lib/search').Bulk
 
 module.exports = function(config) {
   var es = new Elasticsearch.Client(config)
