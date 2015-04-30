@@ -1,2 +1,2 @@
-# stretch-es
-A queue based service for Elasticsearch, with helpers.
+# Elastical
+A flexible chaining API for ElasticSearch
