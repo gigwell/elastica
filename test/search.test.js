@@ -155,7 +155,7 @@ describe("Search", function() {
         .for("click")
         .exec(query, function(err, result) {
           _.isNull(err).should.eql(true)
-          result.should.eql(hits)
+          result.raw.should.eql(hits)
           done()
         })
     })

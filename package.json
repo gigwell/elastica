@@ -37,6 +37,7 @@
     "unused": true
   },
   "devDependencies": {
+    "eyes": "^0.1.8",
     "mocha": "^2.2.4",
     "should": "^6.0.1",
     "sinon": "^1.14.1"
