@@ -30,6 +30,7 @@ describe("Aggs", function() {
                 transaction_count: { value: 120 },
                 conversionRate: { value: 0.56 },
                 transactions: {
+                  doc_count: 200,
                   count: { value: 120 },
                   rate: { value: 0.56 }
                 }
@@ -40,6 +41,7 @@ describe("Aggs", function() {
                 transaction_count: { value: 230 },
                 conversionRate: { value: 0.78 },
                 transactions: {
+                  doc_count: 350,
                   count: { value: 230 },
                   rate: { value: 0.78 }
                 }
@@ -84,13 +86,26 @@ describe("Aggs", function() {
         { name: "Bob", transactions: {count: 230, rate: 0.78 } }
       ])
     })
+
+    it('can specify non leaf subaggregations', function() {
+      var response = new Response(this.esresponse)
+      inspect(response.aggs.terms('name', {with: 'nested:transactions'}))
+      response.aggs.terms('name', {
+        with: 'nested:transactions'
+      }).should.match([
+        { name: "Alice", transactions: {total: 200} },
+        { name: "Bob", transactions: {total: 350} }
+      ])
+    });
   })
 
   describe("#filter", function() {
     it("returns total", function() {
       var esresponse = { aggregations: { onlyGoodOnes: { doc_count: 4200 } } }
       var response = new Response(esresponse)
-      response.aggs.filter('onlyGoodOnes').should.eql({total: 4200})
+      response.aggs.filter('onlyGoodOnes').should.eql({
+        onlyGoodOnes: { total: 4200 }
+      })
     })
   })
 
