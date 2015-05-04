@@ -127,5 +127,25 @@ describe("Aggs", function() {
         .should.eql({filter: {rate: 0.85}})
     })
   })
+
+  describe('#percentile', function() {
+    it('returns each value', function() {
+      var esresponse = { aggregations: {
+        rates: {
+          values: {
+            '25': 0.20,
+            '50': 0.45,
+            '99': 0.04
+          }
+        }
+      } }
+      var response = new Response(esresponse)
+      response.aggs.percentiles('rates').should.eql({
+        25: 0.20,
+        50: 0.45,
+        99: 0.04
+      })
+    })
+  })
 })
 
