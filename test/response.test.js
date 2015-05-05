@@ -107,6 +107,22 @@ describe("Aggs", function() {
         onlyGoodOnes: { count: 4200 }
       })
     })
+
+    it("takes sub aggs", function() {
+      var esresponse = {
+        aggregations: {
+          onlyGoodOnes: {
+            doc_count: 4200,
+            rate: { value: 100 }
+          }
+        }
+      }
+
+      var response = new Response(esresponse)
+      response.aggs.filter('onlyGoodOnes', {with: 'rate'}).should.eql({
+        onlyGoodOnes: { count: 4200, rate: 100 }
+      })
+    })
   })
 
   describe("#avg", function() {
