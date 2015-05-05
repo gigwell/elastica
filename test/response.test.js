@@ -1,4 +1,5 @@
 require('test_helper')
+var assert = require('assert')
 var Response = require("response")
 
 describe("Response", function() {
@@ -55,8 +56,8 @@ describe("Aggs", function() {
     it("simplifies bucket/value structure", function() {
       var response = new Response(this.esresponse)
       response.aggs.terms('name').should.eql([
-        { name: "Alice", total: 300 },
-        { name: "Bob", total: 200 },
+        { name: "Alice", count: 300 },
+        { name: "Bob", count: 200 },
       ])
     })
 
@@ -82,29 +83,28 @@ describe("Aggs", function() {
       response.aggs.terms('name', {
         with: 'transactions.count transactions.rate'
       }).should.match([
-        { name: "Alice", transactions: { count: 120, rate: 0.56 } },
-        { name: "Bob", transactions: {count: 230, rate: 0.78 } }
+        { name: "Alice", count: 120, rate: 0.56 },
+        { name: "Bob", count: 230, rate: 0.78 }
       ])
     })
 
     it('can specify non leaf subaggregations', function() {
       var response = new Response(this.esresponse)
-      inspect(response.aggs.terms('name', {with: 'nested:transactions'}))
       response.aggs.terms('name', {
         with: 'nested:transactions'
       }).should.match([
-        { name: "Alice", transactions: {total: 200} },
-        { name: "Bob", transactions: {total: 350} }
+        { name: "Alice", transactions: {count: 200} },
+        { name: "Bob", transactions: {count: 350} }
       ])
     });
   })
 
   describe("#filter", function() {
-    it("returns total", function() {
+    it("returns count", function() {
       var esresponse = { aggregations: { onlyGoodOnes: { doc_count: 4200 } } }
       var response = new Response(esresponse)
       response.aggs.filter('onlyGoodOnes').should.eql({
-        onlyGoodOnes: { total: 4200 }
+        onlyGoodOnes: { count: 4200 }
       })
     })
   })
@@ -124,7 +124,7 @@ describe("Aggs", function() {
       }
       var response = new Response(esresponse)
       response.aggs.avg('filter.rate')
-        .should.eql({filter: {rate: 0.85}})
+        .should.eql({rate: 0.85})
     })
   })
 
@@ -141,9 +141,32 @@ describe("Aggs", function() {
       } }
       var response = new Response(esresponse)
       response.aggs.percentiles('rates').should.eql({
-        25: 0.20,
-        50: 0.45,
-        99: 0.04
+        rates: {
+          25: 0.20,
+          50: 0.45,
+          99: 0.04
+        }
+      })
+    })
+  })
+
+  describe('Error handling', function() {
+    it('throws a Parse error', function() {
+      var esresponse = { aggregations: {
+        rates: {
+          values: {
+            '25': 0.20,
+            '50': 0.45,
+            '99': 0.04
+          }
+        }
+      } }
+
+      var response = new Response(esresponse)
+      assert.throws(function() {
+        response.aggs.filter('ratios.values.25')
+      }, function(err) {
+        return /ratios.values/.test(err.msg) && !!err.body.rates
       })
     })
   })
