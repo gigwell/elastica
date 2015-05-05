@@ -1,5 +1,5 @@
 {
-  "name": "elastical",
+  "name": "elastica",
   "version": "0.0.2",
   "description": "A flexible chaining API for ElasticSearch",
   "main": "index.js",
