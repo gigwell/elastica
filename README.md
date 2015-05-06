@@ -108,7 +108,7 @@ elastica.search
 <a name="update" />
 #### Update
 
-Update works very much like search with two additional operations: *doc*, *with*, and *withScript*. Update's callback returns the raw elasticsearch reponse.
+Update works very much like search with three additional operations: *doc*, *with*, and *withScript*. Update's callback returns the raw elasticsearch reponse.
 
 ##### Examples
 
