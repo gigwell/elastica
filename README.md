@@ -186,7 +186,7 @@ elastica.search.exec(query, function(err, res) {
 
 #### Aggs 
 
-Aggs is a object that provides functions to pull relevant data from the aggregations portion of the Elasticsearch response. There are four types of Elastica aggregations which map to ES aggregations. 
+Aggs is an object that provides functions to pull relevant data from the aggregations portion of the Elasticsearch response. There are four types of Elastica aggregations which map to ES aggregations. 
 
 <a name="valueAgg" />
 __Value Aggregations__
