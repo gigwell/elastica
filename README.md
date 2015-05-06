@@ -41,7 +41,7 @@ var elastica = require('elastica')(config.es)
 
 ### Requests
 
-Elastica uses a chained interface to simplify the creation of requests. Every function call returns a new request object. These objects are immutable, and can be saved and reused for convienience. 
+Elastica uses a chained interface to simplify the creation of requests. Every function call returns a new request object. These objects are immutable, and can be saved and reused for convienience. Subsequent method calls will not change their state.
 
 <a name="search" />
 #### Search
