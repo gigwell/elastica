@@ -242,9 +242,12 @@ console.dir(res.aggs.terms('name'))
 // Prints [{name: 'Alice', count: 100}, {name: 'Bob', count: 200}]
 ```
 
+
+aggs.terms('artists', {with: 'range[transactions.revenue sales]'}
+
 __Dot notation__
 
-If you have deeply nested single count aggregations, you can use dot notation to access deeply nested chlid values.
+If you have deeply nested single count aggregations, you can use dot notation to access deeply nested child values.
 
 ```{javascript}
 // Elasticsearch response is: 
@@ -262,7 +265,11 @@ console.dir(res.aggs.sum('successfulTransactions.highValued.grossRevenue'))
 
 __Subaggregations (The *with* option)__
 
-Count and Multicount aggregations support accessing child aggregations with a space separated subaggregation string. Subaggregation strings are of the following format: "[type]:name [type]:name2 ..."
+Count and Multicount aggregations support accessing child aggregations with a space separated subaggregations expressions. Subaggregation expressions follow the [EBNF](http://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form) grammar below: 
+
+buckets = "["{subagg}"]"
+subagg = [type:]name[buckets]
+expression = {subagg}
 
 ```{javascript}
 // Elasticsearch response is: 
@@ -296,6 +303,6 @@ console.dir(res.aggs.terms('name', {with: 'nested:transactions conversionRate'})
 
 ### What's next?
 
-* Chained interface for extracting aggregation values
+* Interface for building queries.
 * Support for add operations
 * Support for delete operations
