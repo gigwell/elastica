@@ -34,6 +34,13 @@ describe("Aggs", function() {
                   doc_count: 200,
                   count: { value: 120 },
                   rate: { value: 0.56 }
+                },
+                salesTotal: {
+                  buckets: [
+                    {key: '10-20',
+                    doc_count: 10,
+                    sales: {value: 2}}
+                  ]
                 }
               },
               {
@@ -45,12 +52,32 @@ describe("Aggs", function() {
                   doc_count: 350,
                   count: { value: 230 },
                   rate: { value: 0.78 }
+                },
+                salesTotal: {
+                  buckets: [
+                    {key: '10-20',
+                    doc_count: 5,
+                    sales: {value: 1}}
+                  ]
                 }
               }
             ]
           }
         }
       }
+    })
+
+    it("handles nested bucket aggs", function() {
+      var response = new Response(this.esresponse)
+      response.aggs.terms('name', {with: 'salesTotal[sales]'}).should.match([{
+        name: "Alice",
+        count: 300,
+        salesTotals: [{salesTotal: "10-20", count: 10, sales: 2}]
+      }, {
+        name: "Bob",
+        count: 200,
+        salesTotals: [{salesTotal: "10-20", count: 5, sales: 1}]}
+      ])
     })
 
     it("simplifies bucket/value structure", function() {
