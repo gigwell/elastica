@@ -92,7 +92,7 @@ search.in('myIndex2').exec({myField: 'searchValue2'},function(err, response) {})
 
 __Search Options__
 
-Search takes an optional parameter that is passed to [ES API](http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search), in order to qualify the search. 
+Search takes an optional parameter that is passed to [ES API](http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search), in order to qualify the search. In the following example we pass *search_type* and *ignore_unavailable* optional parameters to Elasticsearch.
 
 ```{javascript}
 var template = '{"filter": { "term": { "field": "<%= myField %>"} } }'
