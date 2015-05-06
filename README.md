@@ -256,12 +256,13 @@ If you have deeply nested single count aggregations, you can use dot notation to
 //   } 
 // }
 
-console.dir(res.aggs.sum('successfulTransactions.highValued.grossRevenue')) // Prints { grossRevenue: 10000000 }
+console.dir(res.aggs.sum('successfulTransactions.highValued.grossRevenue')) 
+// Prints { grossRevenue: 10000000 }
 ```
 
-__Subaggregations__
+__Subaggregations (The *with* option)__
 
-Count and Multicount aggregations support accessing child aggregations with a space separated subaggregation string.
+Count and Multicount aggregations support accessing child aggregations with a space separated subaggregation string. Subaggregation strings are of the following format: "[type]:name [type]:name2 ..."
 
 ```{javascript}
 // Elasticsearch response is: 
