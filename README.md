@@ -79,7 +79,7 @@ elastica.search
   })
 ```
 
-__Reuse Request__
+__Request Reuse__
 
 ```{javascript}
 var template = '{"filter": { "term": { "field": "<%= myField %>"} } }'
