@@ -52,7 +52,7 @@ Used to make search queries. All search callbacks pass an [Elastica Response Obj
 
 __Simple Search__
 
-The simple search use for to describe the document type and in to describe the index range the search takes place in.
+The simple search uses *for* to describe the document type and *in* to describe the index range the search takes place in.
 
 ```{javascript}
 var query = '{"filter": { "term": { "field": "searchValue"} } }'
