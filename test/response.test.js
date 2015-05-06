@@ -19,7 +19,7 @@ describe("Response", function() {
 
 
 describe("Aggs", function() {
-  describe("#terms", function() {
+  describe("#multiCount", function() {
     beforeEach(function() {
       this.esresponse = {
         aggregations: {
@@ -69,7 +69,9 @@ describe("Aggs", function() {
 
     it("handles nested bucket aggs", function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name', {with: 'salesTotal[sales]'}).should.match([{
+      response.aggs.multiCount('name', {
+        with: 'salesTotal[sales]'
+      }).should.match([{
         name: "Alice",
         count: 300,
         salesTotals: [{salesTotal: "10-20", count: 10, sales: 2}]
@@ -82,7 +84,7 @@ describe("Aggs", function() {
 
     it("simplifies bucket/value structure", function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name').should.eql([
+      response.aggs.multiCount('name').should.eql([
         { name: "Alice", count: 300 },
         { name: "Bob", count: 200 },
       ])
@@ -90,7 +92,7 @@ describe("Aggs", function() {
 
     it("takes a customizable doc_count field", function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name', {doc_count: 'clicks'}).should.eql([
+      response.aggs.multiCount('name', {doc_count: 'clicks'}).should.eql([
         { name: "Alice", clicks: 300 },
         { name: "Bob", clicks: 200 },
       ])
@@ -98,8 +100,9 @@ describe("Aggs", function() {
 
     it("resolves simple sub aggregations", function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name', {with: 'transaction_count conversionRate'})
-      .should.match([
+      response.aggs.multiCount('name', {
+        with: 'transaction_count conversionRate'
+      }).should.match([
         { name: "Alice", transaction_count: 120, conversionRate: 0.56 },
         { name: "Bob", transaction_count: 230, conversionRate: 0.78 }
       ])
@@ -107,7 +110,7 @@ describe("Aggs", function() {
 
     it("handles sub aggregation with dot notations", function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name', {
+      response.aggs.multiCount('name', {
         with: 'transactions.count transactions.rate'
       }).should.match([
         { name: "Alice", count: 120, rate: 0.56 },
@@ -117,7 +120,7 @@ describe("Aggs", function() {
 
     it('can specify non leaf subaggregations', function() {
       var response = new Response(this.esresponse)
-      response.aggs.terms('name', {
+      response.aggs.multiCount('name', {
         with: 'nested:transactions'
       }).should.match([
         { name: "Alice", transactions: {count: 200} },
@@ -126,11 +129,11 @@ describe("Aggs", function() {
     });
   })
 
-  describe("#filter", function() {
+  describe("#count", function() {
     it("returns count", function() {
       var esresponse = { aggregations: { onlyGoodOnes: { doc_count: 4200 } } }
       var response = new Response(esresponse)
-      response.aggs.filter('onlyGoodOnes').should.eql({
+      response.aggs.count('onlyGoodOnes').should.eql({
         onlyGoodOnes: { count: 4200 }
       })
     })
@@ -146,17 +149,17 @@ describe("Aggs", function() {
       }
 
       var response = new Response(esresponse)
-      response.aggs.filter('onlyGoodOnes', {with: 'rate'}).should.eql({
+      response.aggs.count('onlyGoodOnes', {with: 'rate'}).should.eql({
         onlyGoodOnes: { count: 4200, rate: 100 }
       })
     })
   })
 
-  describe("#avg", function() {
+  describe("#value", function() {
     it("returns value", function() {
       var esresponse = { aggregations: { rate: { value: 0.85 } } }
       var response = new Response(esresponse)
-      response.aggs.avg('rate').should.eql({rate: 0.85})
+      response.aggs.value('rate').should.eql({rate: 0.85})
     })
 
     it("accepts dot notations", function() {
@@ -166,29 +169,41 @@ describe("Aggs", function() {
         }
       }
       var response = new Response(esresponse)
-      response.aggs.avg('filter.rate')
+      response.aggs.value('filter.rate')
         .should.eql({rate: 0.85})
     })
   })
 
-  describe('#percentile', function() {
-    it('returns each value', function() {
-      var esresponse = { aggregations: {
-        rates: {
-          values: {
-            '25': 0.20,
-            '50': 0.45,
-            '99': 0.04
-          }
+  describe('#multiValue', function() {
+    var esresponse = { aggregations: {
+      rates: {
+        values: {
+          '25': 0.20,
+          '50': 0.45,
+          '99': 0.04
         }
-      } }
+      }
+    } }
+
+    it('returns each value', function() {
       var response = new Response(esresponse)
-      response.aggs.percentiles('rates').should.eql({
+      response.aggs.multiValue('rates').should.eql({
         rates: {
           25: 0.20,
           50: 0.45,
           99: 0.04
         }
+      })
+    })
+
+    it('returns each value as an array', function() {
+      var response = new Response(esresponse)
+      response.aggs.multiValue('rates', {asArray: true}).should.eql({
+        rates: [
+          {key: "25", value: 0.20},
+          {key: "50", value: 0.45},
+          {key: "99", value: 0.04}
+        ]
       })
     })
   })
