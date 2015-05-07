@@ -288,7 +288,9 @@ as the *with* option in the second parameter.
 Subaggregation expressions follow the [EBNF](http://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form) grammar below: 
 
 expression = {subagg}
+
 subagg = [type:]name[buckets]
+
 buckets = "["{subagg}"]"
 
 ```{javascript}
