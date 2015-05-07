@@ -1,6 +1,6 @@
 {
   "name": "elastica",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A flexible chaining API for ElasticSearch",
   "main": "index.js",
   "scripts": {
