@@ -1,4 +1,4 @@
-# Elastica
+# Elastica [![Build Status](https://travis-ci.org/jamplify/elastica.svg)](https://travis-ci.org/jamplify/elastica)
 A flexible chaining API for ElasticSearch
 
 Raison D'être 
