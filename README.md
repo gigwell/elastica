@@ -214,7 +214,7 @@ Multi value aggregations map to the *percentiles* elasticsearch aggregation.
 // { aggregations: { salesPercentages: { values: { 25: 100, 50: 350, 75: 450 } } } }
 
 res.aggs.percentiles('salesPercentages')
-// Return { salesPercentages: { 25: 100, 50: 350, 75: 450 } }
+// Returns { salesPercentages: { 25: 100, 50: 350, 75: 450 } }
 
 res.aggs.percentiles('salesPercentages', {asArray: true})
 // Returns
