@@ -17,6 +17,7 @@ Contents
 
 * [Raw](#raw)
 * [Hits](#hits)
+* [Aggregation Expression](#aggExp)
 * [Value Aggregation](#valueAgg)
 * [Multi Value Aggregation](#multiValueAgg)
 * [Count Aggregation](#countAgg)
@@ -263,13 +264,18 @@ console.dir(res.aggs.sum('successfulTransactions.highValued.grossRevenue'))
 // Prints { grossRevenue: 10000000 }
 ```
 
-__Subaggregations (The *with* option)__
+<a name="aggExp" />
+__Aggregation Expression__
 
-Count and Multicount aggregations support accessing child aggregations with a space separated subaggregations expressions. Subaggregation expressions follow the [EBNF](http://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form) grammar below: 
+Aggregations can also be built from an aggregation expression. This allows quick and easy access for multiple aggregations at 
+different levels of the response body. An expression can also be passed into [Count](#countAgg) and [Multicount](#multiCountAgg) aggs
+as the *with* option in the second parameter.
 
-buckets = "["{subagg}"]"
-subagg = [type:]name[buckets]
+Subaggregation expressions follow the [EBNF](http://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form) grammar below: 
+
 expression = {subagg}
+subagg = [type:]name[buckets]
+buckets = "["{subagg}"]"
 
 ```{javascript}
 // Elasticsearch response is: 
@@ -282,6 +288,7 @@ expression = {subagg}
 //         conversionRate: { value: 0.56 },                                                                         
 //         transactions: {                                                                                          
 //           doc_count: 200,                                                                                        
+//           highValued: { value: 68 }
 //         }                                                                                                        
 //       },                                                                                                         
 //       {                                                                                                          
@@ -290,15 +297,25 @@ expression = {subagg}
 //         conversionRate: { value: 0.78 },                                                                         
 //         transactions: {                                                                                          
 //           doc_count: 350,                                                                                        
+//           highValued: { value: 42 }
 //         }                                                                                                        
 //       }                                                                                                          
 //     ]                                                                                                            
 //   }                                                                                                              
 // }
 
-console.dir(res.aggs.terms('name', {with: 'nested:transactions conversionRate'})) 
-// Prints [{name: "Alice", total: 300, conversionRate: 0.56, transactions: {total: 200}},
-//         {name: "Bob", total: 200, conversionRate: 0.78, transactions: {total: 350}}]
+console.dir(res.aggs.fromExpression('name[nested:transactions conversionRate transactions.highValued]'))
+// Prints 
+// { 
+//   names: [
+//     {name: "Alice", total: 300, conversionRate: 0.56, highValued: 68, transactions: {total: 200}},
+//     {name: "Bob", total: 200, conversionRate: 0.78, highValued: 42, transactions: {total: 350}}
+//   ]
+// }
+
+console.dir(res.aggs.multiCount('name', {with: 'nested:transactions conversionRate transactions.highValued'})) 
+// Prints [{name: "Alice", total: 300, conversionRate: 0.56, highValued: 68, transactions: {total: 200}},
+//         {name: "Bob", total: 200, conversionRate: 0.78, highValued: 42, transactions: {total: 350}}]
 ```
 
 ### What's next?
