@@ -201,7 +201,7 @@ Value aggregations map to the *avg*, *sum*, *max*, and *min* elasticsearch aggre
 // Elasticsearch response is: 
 // { aggregations: { totalSales: { value: 400 } } }
 
-res.aggs.sum('totalSales') //Prints { totalSales: 400 }
+res.aggs.sum('totalSales') //Returns { totalSales: 400 }
 ```
 
 <a name="multiValueAgg" />
