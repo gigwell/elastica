@@ -17,11 +17,11 @@ Contents
 
 * [Raw](#raw)
 * [Hits](#hits)
-* [Aggregation Expression](#aggExp)
 * [Value Aggregation](#valueAgg)
 * [Multi Value Aggregation](#multiValueAgg)
 * [Count Aggregation](#countAgg)
 * [Multi Count Aggregation](#multiCountAgg)
+* [Aggregation Expression](#aggExp)
 
 
 Installation
@@ -102,7 +102,10 @@ elastica.search
   .for('myDocType')
   .in('myIndex1,myIndex2')
   .compile(template)
-  .exec({myField: 'searchValue'}, {search_type: 'count', ignore_unavailable: true}, function(err, response) {
+  .exec({myField: 'searchValue'}, { 
+    search_type: 'count', 
+    ignore_unavailable: true
+  }, function(err, response) {
   })
 ```
 
@@ -198,7 +201,7 @@ Value aggregations map to the *avg*, *sum*, *max*, and *min* elasticsearch aggre
 // Elasticsearch response is: 
 // { aggregations: { totalSales: { value: 400 } } }
 
-console.dir(res.aggs.sum('totalSales')) //Prints { totalSales: 400 }
+res.aggs.sum('totalSales') //Prints { totalSales: 400 }
 ```
 
 <a name="multiValueAgg" />
@@ -210,11 +213,18 @@ Multi value aggregations map to the *percentiles* elasticsearch aggregation.
 // Elasticsearch response is: 
 // { aggregations: { salesPercentages: { values: { 25: 100, 50: 350, 75: 450 } } } }
 
-console.dir(res.aggs.percentiles('salesPercentages')) 
-// Prints { salesPercentages: { 25: 100, 50: 350, 75: 450 } }
+res.aggs.percentiles('salesPercentages')
+// Return { salesPercentages: { 25: 100, 50: 350, 75: 450 } }
 
-console.dir(res.aggs.percentiles('salesPercentages', {asArray: true})) 
-// Prints { salesPercentages: [{key: 25, value: 100}, {key: 50, value: 350}, {key: 75, value: 450}] }
+res.aggs.percentiles('salesPercentages', {asArray: true})
+// Returns
+// { 
+//   salesPercentages: [
+//     {key: 25, value: 100}, 
+//     {key: 50, value: 350}, 
+//     {key: 75, value: 450}
+//   ] 
+// }
 ```
 
 <a name="countAgg" />
@@ -226,8 +236,8 @@ Count aggregations map to the *nested* and *filtered* elasticsearch aggregations
 // Elasticsearch response is: 
 // { aggregations: { highValuedSales: { doc_count: 500 } }
 
-console.dir(res.aggs.filter('highValuedSales')) 
-// Prints { highValuedSales: { count: 500 } }
+res.aggs.filter('highValuedSales')
+// Returns { highValuedSales: { count: 500 } }
 ```
 
 <a name="multiCountAgg" />
@@ -237,10 +247,14 @@ Count aggregations map to the *ranges*, *terms*, *histogram*, and *geohashGrid* 
 
 ```{javascript}
 // Elasticsearch response is: 
-// { aggregations: { name: { buckets: [{key: 'Alice', doc_count: 100}, {key: 'Bob', doc_count: 200}] } }
+// { 
+//   aggregations: { 
+//     name: { buckets: [{key: 'Alice', doc_count: 100}, {key: 'Bob', doc_count: 200}] 
+//   } 
+// }
 
-console.dir(res.aggs.terms('name')) 
-// Prints [{name: 'Alice', count: 100}, {name: 'Bob', count: 200}]
+res.aggs.terms('name')
+// Returns [{name: 'Alice', count: 100}, {name: 'Bob', count: 200}]
 ```
 
 
@@ -260,8 +274,8 @@ If you have deeply nested single count aggregations, you can use dot notation to
 //   } 
 // }
 
-console.dir(res.aggs.sum('successfulTransactions.highValued.grossRevenue')) 
-// Prints { grossRevenue: 10000000 }
+res.aggs.sum('successfulTransactions.highValued.grossRevenue')
+// Returns { grossRevenue: 10000000 }
 ```
 
 <a name="aggExp" />
@@ -304,8 +318,8 @@ buckets = "["{subagg}"]"
 //   }                                                                                                              
 // }
 
-console.dir(res.aggs.fromExpression('name[nested:transactions conversionRate transactions.highValued]'))
-// Prints 
+res.aggs.fromExpression('name[nested:transactions conversionRate transactions.highValued]')
+// Returns
 // { 
 //   names: [
 //     {name: "Alice", total: 300, conversionRate: 0.56, highValued: 68, transactions: {total: 200}},
@@ -313,9 +327,11 @@ console.dir(res.aggs.fromExpression('name[nested:transactions conversionRate tra
 //   ]
 // }
 
-console.dir(res.aggs.multiCount('name', {with: 'nested:transactions conversionRate transactions.highValued'})) 
-// Prints [{name: "Alice", total: 300, conversionRate: 0.56, highValued: 68, transactions: {total: 200}},
-//         {name: "Bob", total: 200, conversionRate: 0.78, highValued: 42, transactions: {total: 350}}]
+res.aggs.multiCount('name', {with: 'nested:transactions conversionRate transactions.highValued'})
+// Returns [
+//  {name: "Alice", total: 300, conversionRate: 0.56, highValued: 68, transactions: {total: 200}},
+//  {name: "Bob", total: 200, conversionRate: 0.78, highValued: 42, transactions: {total: 350}}
+// ]
 ```
 
 ### What's next?
