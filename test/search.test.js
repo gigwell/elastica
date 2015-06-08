@@ -26,6 +26,13 @@ describe("Bulk", function() {
       var update = this.update.doc(42).with({field: 'val'})
       this.bulk.add(update).transactions.length.should.eql(1)
     })
+
+    it.only("handles more than 1 transaction", function() {
+      var b = this.bulk.add(this.update.doc(42).with({field: 'val'}))
+               .add(this.update.doc(52).with({field: 'var'}))
+      console.dir(b.transactions)
+      b.transactions.length.should.eql(2)
+    })
   })
 
   describe("#exec", function() {
