@@ -89,7 +89,6 @@ describe("Aggs", function() {
 
     it('can specify non leaf subaggregations', function() {
       var response = new Response(this.esresponse)
-      inspect(response.aggs.terms('name', {with: 'nested:transactions'}))
       response.aggs.terms('name', {
         with: 'nested:transactions'
       }).should.match([

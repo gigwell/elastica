@@ -3,6 +3,7 @@ require('test_helper')
 var Search = require('search').Search
 var Update = require('search').Update
 var Bulk = require('search').Bulk
+var Index = require('search').Index
 
 describe("Bulk", function() {
   beforeEach(function() {
@@ -12,6 +13,7 @@ describe("Bulk", function() {
     }
     this.bulk = new Bulk(this.es)
     this.update = new Update(this.es)
+    this.index = new Index(this.es)
   })
 
   describe("#add", function() {
@@ -51,6 +53,24 @@ describe("Bulk", function() {
           body: [
             { update: { _id: 42, _index: 'analytics' } },
             { doc: {field: 'value'} }
+          ]
+        }).should.eql(true)
+        done()
+      })
+    })
+
+    it("bulk executes the index transactions", function(done) {
+      var stub = sandbox.stub(this.es, 'bulk').yields()
+      this.bulk.add([
+        this.update.in("analytics").doc(42).with({field: 'value'}),
+        this.index.in("analytics").for('click').id(37).doc({a: 'b'})
+      ]).exec(function() {
+        stub.calledWith({
+          body: [
+            { update: { _id: 42, _index: 'analytics' } },
+            { doc: {field: 'value'} },
+            { index: { _id: 37, _index: 'analytics', _type: 'click'}},
+            { a: 'b'}
           ]
         }).should.eql(true)
         done()
@@ -104,6 +124,36 @@ describe("Update", function() {
       var update = this.update.in("analytics").for("click")
       update.exec(function() {
         stub.calledWith(update.request)
+        done()
+      })
+    })
+  })
+})
+
+describe("Index", function() {
+  beforeEach(function() {
+    this.es = { index: function () {} }
+    this.index = new Index(this.es)
+  })
+
+  describe('#id', function() {
+    it('should set the request id', function() {
+      this.index.id(42).request.id.should.eql(42)
+    })
+  })
+
+  describe('#doc', function() {
+    it('should set the request body', function() {
+      this.index.doc({a: 'b'}).request.body.should.eql({a: 'b'})
+    })
+  })
+
+  describe("#exec", function() {
+    it("inserts the doc", function(done) {
+      var stub = sandbox.stub(this.es, 'index').yields()
+      var index = this.index.in("analytics").for("click")
+      index.exec(function() {
+        stub.calledWith(index.request)
         done()
       })
     })
