@@ -11,7 +11,7 @@ Contents
 
 * [Search](#search)
 * [Update](#update)
-* [Insert](#insert)
+* [Index](#index)
 * [Bulk](#bulk)
 
 ## Response
