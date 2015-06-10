@@ -3,7 +3,7 @@ A flexible chaining API for ElasticSearch
 
 Raison D'être 
 --------------
-Elasticsearch is an amazing tool. However, we find that its request/response payloads to be a little bloated. It is hard to maintain a clean layer to handle your ES requests. This library aims to make it easier to send requests and marshall responses from ES. The current version focuses primarily on querying and marshalling aggregations but we'd like to quickly add more features as we or the community needs them.
+Elasticsearch is an amazing tool. However, we find that it is hard to maintain a clean service layer to handle your ES requests. This library aims to make it easier to send requests and marshall responses from ES. The current version focuses primarily on querying and marshalling aggregations but we'd like to quickly add more features as we or the community needs them.
 
 Contents
 ---------
