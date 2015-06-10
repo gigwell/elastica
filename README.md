@@ -11,6 +11,7 @@ Contents
 
 * [Search](#search)
 * [Update](#update)
+* [Insert](#insert)
 * [Bulk](#bulk)
 
 ## Response
@@ -136,6 +137,25 @@ elastica.update
   .in('myIndex1')
   .doc('documentId')
   .withScript('scriptNameOrContents', {scriptParam1: 'scriptValue1'})
+  .exec(function(err, response) {})
+```
+
+<a name="Index" />
+#### Index
+
+Index's callback returns the raw elasticsearch reponse.
+
+##### Examples
+
+__Document Update__
+
+```{javascript}
+elastica.index
+  .for('myDocType')
+  .in('myIndex1')
+  .doc({field: 'value')
+  .id(docId) //optional
+  .parent(parentId) //optional
   .exec(function(err, response) {})
 ```
 
