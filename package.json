@@ -1,6 +1,6 @@
 {
   "name": "elastica",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A flexible chaining API for ElasticSearch",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,11 @@
     "elasticsearch",
     "analytics",
     "search",
-    "lucene"
+    "lucene",
+    "es",
+    "Elasticsearch",
+    "client",
+    "aggregation"
   ],
   "author": "Matt Roman",
   "license": "MIT",
