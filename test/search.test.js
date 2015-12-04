@@ -27,7 +27,7 @@ describe("Bulk", function() {
       this.bulk.add(update).transactions.length.should.eql(1)
     })
 
-    it.only("handles more than 1 transaction", function() {
+    it("handles more than 1 transaction", function() {
       var b = this.bulk.add(this.update.doc(42).with({field: 'val'}))
                .add(this.update.doc(52).with({field: 'var'}))
       console.dir(b.transactions)
