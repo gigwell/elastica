@@ -217,6 +217,15 @@ describe("Search", function() {
         })
     })
 
+    it("catches bad template errors", function() {
+      var template = '{ "match": "<%= keyword %>", }'
+      var analytics = this.search.compile(template)
+
+      analytics.exec({keyword: 'blarg'}, function(err) {
+        err.message.should.match(/^Error parsing template/)
+      })
+    })
+
     it("allows for additional parameters", function(done) {
       var query = {"match_all" : { }}
       var hits = {
