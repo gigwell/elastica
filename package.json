@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/jamplify/elastical",
   "dependencies": {
-    "elasticsearch": "^10.0.1",
+    "elasticsearch": "15.3.0",
     "inflection": "^1.7.0",
     "lodash": "^3.7.0"
   },
