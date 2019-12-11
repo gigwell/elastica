@@ -30,7 +30,7 @@
   "dependencies": {
     "elasticsearch": "15.3.0",
     "inflection": "^1.7.0",
-    "lodash": "^3.7.0"
+    "lodash": "^4.17.15"
   },
   "jshintConfig": {
     "eqeqeq": true,
